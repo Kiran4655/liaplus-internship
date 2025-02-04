@@ -1,0 +1,19 @@
+# .elasticbeanstalk/config.yml
+branch-defaults:
+  main:
+    environment: flask-environmenrt
+    group_suffix: null
+global:
+  application_name: Liaplus-Internship
+  branch: null
+  default_ec2_keyname: null
+  default_platform: Python 3.8
+  default_region: ap-south-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  repository: null
+  sc: git
+  workspace_type: Application
