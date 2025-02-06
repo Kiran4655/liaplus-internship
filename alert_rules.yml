@@ -1,0 +1,10 @@
+groups:
+- name: example
+  rules:
+  - alert: HighErrorRate
+    expr: rate(flask_http_request_total{status=~"5.."}[5m]) > 0.01
+    for: 10m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High error rate detected"

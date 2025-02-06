@@ -1,0 +1,66 @@
+Disaster Recovery Strategy Document
+RPO (Recovery Point Objective)
+
+Critical data: 15 minutes
+Application data: 1 hour
+Static content: 24 hours
+
+RTO (Recovery Time Objective)
+
+Primary services: 4 hours
+Secondary services: 8 hours
+
+Implementation in AWS
+
+Automated Backups
+
+Using AWS CLI for automated EBS snapshots
+aws ec2 create-snapshot \
+    --volume-id vol-1234567890abcdef0 \
+    --description "Daily backup"
+
+# RDS automated backup
+aws rds create-db-instance \
+    --db-instance-identifier mydb \
+    --backup-retention-period 7
+
+Multi-Region Setup
+
+CloudFormation template snippet
+Resources:
+  CrossRegionReplication:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      ReplicationConfiguration:
+        Role: !GetAtt ReplicationRole.Arn
+        Rules:
+          - Destination:
+              Bucket: !Sub 'arn:aws:s3:::${BackupBucketName}'
+              Region: us-west-2
+            Status: Enabled
+
+Key Components
+
+
+Primary Region: us-east-1
+Backup Region: us-west-2
+S3 Cross-Region Replication
+RDS Multi-AZ deployment
+Route 53 for failover routing
+
+
+Recovery Steps
+
+
+Activate backup region resources
+Update DNS with Route 53
+Restore RDS from latest snapshot
+Scale up backup infrastructure
+
+
+Testing Schedule
+
+
+Monthly DR drills
+Quarterly failover testing
+Annual full recovery simulation

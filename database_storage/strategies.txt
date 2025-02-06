@@ -1,0 +1,58 @@
+Indexing Strategies
+Before: Slow query without index
+SELECT * FROM orders WHERE customer_id = 12345;
+
+-- Add index
+CREATE INDEX idx_customer_id ON orders(customer_id);
+
+-- After: Fast query with index
+SELECT * FROM orders WHERE customer_id = 12345;
+Query Optimization
+Before: Inefficient query
+SELECT * FROM users 
+JOIN orders ON users.id = orders.user_id 
+WHERE users.country = 'USA';
+
+-- After: Optimized query
+SELECT u.name, o.order_date, o.amount 
+FROM users u 
+JOIN orders o ON u.id = o.user_id 
+WHERE u.country = 'USA';
+Partitioning Example
+Partition by date range
+CREATE TABLE orders (
+    order_id INT,
+    order_date DATE,
+    amount DECIMAL
+) PARTITION BY RANGE (order_date);
+
+CREATE TABLE orders_2023 PARTITION OF orders
+    FOR VALUES FROM ('2023-01-01') TO ('2024-01-01');
+Key Optimization Techniques:
+
+Indexing
+
+Create indexes on frequently queried columns
+Use composite indexes for multiple column queries
+Remove unused indexes
+
+
+Query Optimization
+
+Select specific columns instead of *
+Use EXPLAIN ANALYZE to identify bottlenecks
+Optimize JOIN operations
+
+
+Data Partitioning
+
+Partition by date for time-series data
+Partition by region for geographical data
+Regular partition maintenance
+
+
+Regular Maintenance
+
+VACUUM tables regularly
+Update statistics with ANALYZE
+Monitor query performance

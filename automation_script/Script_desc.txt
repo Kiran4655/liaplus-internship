@@ -1,0 +1,113 @@
+Script Purpose
+The simplified server monitoring script is a lightweight Python tool designed to quickly capture and report essential system health metrics. It provides a snapshot of your computer's current performance and resource utilization.
+Detailed Script Breakdown
+Key Components
+pythonCopy# Imported Libraries
+import os           # For file and directory operations
+import psutil       # System and process utilities
+import json         # JSON data handling
+from datetime import datetime  # Timestamp generation
+Main Functions
+
+get_system_health() Function
+
+pythonCopydef get_system_health():
+    """Collect basic system health metrics."""
+    return {
+        'timestamp': datetime.now().isoformat(),  # Current date and time
+        'cpu_usage': psutil.cpu_percent(),        # CPU utilization percentage
+        'memory': {                               # Memory information
+            'total': psutil.virtual_memory().total / (1024 * 1024 * 1024),  # Total memory in GB
+            'used_percent': psutil.virtual_memory().percent  # Memory usage percentage
+        },
+        'disk': {                                 # Disk space information
+            'total': psutil.disk_usage('/').total / (1024 * 1024 * 1024),  # Total disk space in GB
+            'used_percent': psutil.disk_usage('/').percent  # Disk usage percentage
+        },
+        'running_processes': len(psutil.pids())   # Number of active processes
+    }
+What This Function Does:
+
+Captures current timestamp
+Measures CPU usage
+Calculates total and used memory
+Checks total and used disk space
+Counts running processes
+
+
+save_report() Function
+
+pythonCopydef save_report(health_data):
+    """Save health report to a JSON file."""
+    os.makedirs('reports', exist_ok=True)  # Create reports directory if it doesn't exist
+    
+    # Generate unique filename with timestamp
+    filename = f'reports/health_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+    
+    # Write health data to JSON file
+    with open(filename, 'w') as f:
+        json.dump(health_data, f, indent=4)
+    
+    print(f"Report saved: {filename}")
+What This Function Does:
+
+Creates a 'reports' directory
+Generates a unique filename with current timestamp
+Saves system health data as a JSON file
+Prints the filename of the saved report
+
+
+main() Function
+
+pythonCopydef main():
+    """Main function to run system health check."""
+    health_report = get_system_health()  # Collect system metrics
+    save_report(health_report)           # Save the report
+    print(json.dumps(health_report, indent=2))  # Print report to console
+What This Function Does:
+
+Calls get_system_health() to collect metrics
+Saves the report using save_report()
+Prints the report to the console in a readable format
+
+Sample Output Explanation
+jsonCopy{
+    "timestamp": "2024-02-04T12:34:56.789012",  // When the report was generated
+    "cpu_usage": 25.3,                          // CPU is at 25.3% utilization
+    "memory": {
+        "total": 16.0,                          // 16 GB total memory
+        "used_percent": 62.5                    // 62.5% of memory is in use
+    },
+    "disk": {
+        "total": 512.0,                         // 512 GB total disk space
+        "used_percent": 45.2                    // 45.2% of disk space is used
+    },
+    "running_processes": 250                    // 250 processes are currently running
+}
+Practical Use Cases
+
+Quick System Check: Get an instant view of system performance
+Resource Monitoring: Track how your system is utilizing resources
+Troubleshooting: Identify potential performance bottlenecks
+Historical Tracking: Create a log of system performance over time
+
+How to Use
+bashCopy# Prerequisites
+pip install psutil
+
+# Run the script
+python server_monitor.py
+Potential Improvements
+
+Add alerting for high resource usage
+Create graphical visualizations
+Implement more detailed system information
+Add network usage metrics
+
+Benefits
+
+Lightweight and simple
+Cross-platform compatibility
+Easy to understand and modify
+Minimal dependencies
+Generates machine-readable reports
